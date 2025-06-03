@@ -1,0 +1,34 @@
+# Exercise 1: Variable Declaration and Output
+my_var = "Learning Python is fun!"
+print(my_var)
+
+
+# Exercise 2: Typecasting an Integer to String
+age = 24
+print("I am " + str(age) + " years old.")
+
+
+# Exercise 3: Performing Operations
+a = 10
+b = 5
+c = 3
+print("Addition:", a + b + c)
+print("Subtraction:", a - b - c)
+print("Multiplication:", a * b * c)
+print("Division:", a / b / c)
+
+
+# Exercise 4: Comparison for Equality
+x = 15
+y = 20
+print("Are x and y equal?", x == y)
+
+
+# Exercise 5: Logical AND Operation
+num1 = 12
+num2 = 18
+print("Are both numbers greater than 10?", num1 > 10 and num2 > 10)
+
+
+# Exercise 6: End Character in Print Statement
+print("This statement ends with an at symbol", end="@")
