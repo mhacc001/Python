@@ -1,0 +1,44 @@
+# Exercise 1: Convert Temperature
+def celsius_to_fahrenheit(celsius):
+    return (celsius * 9/5) + 32
+
+temp_fahrenheit = celsius_to_fahrenheit(25)
+print(f"Temperature in Fahrenheit: {temp_fahrenheit}")
+
+# Exercise 2: Check Even or Odd
+def is_even(number):
+    return number % 2 == 0
+
+print(f"4 is even: {is_even(4)}")
+print(f"7 is even: {is_even(7)}")
+
+# Exercise 3: Find Maximum
+def find_max(a, b):
+    return a if a > b else b
+
+print(f"Max of 10 and 20: {find_max(10, 20)}")
+
+# Exercise 4: Calculate Factorial
+def factorial(n):
+    result = 1
+    while n > 1:
+        result *= n
+        n -= 1
+    return result
+
+print(f"Factorial of 5: {factorial(5)}")
+
+# Exercise 5: Reverse a String
+def reverse_string(s):
+    return s[::-1]
+
+print(f"Reverse of 'hello': {reverse_string('hello')}")
+
+# Exercise 6: Count Vowels in a String
+def count_vowels(text):
+    vowels = "aeiouAEIOU"
+    count = 0
+    for char in text:
+        if char in vowels:
+            count += 1
+    return count
