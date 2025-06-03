@@ -1,0 +1,58 @@
+# Exercise 1: Even or Odd
+number = int(input("Exercise 1 - Enter a number: "))
+if number % 2 == 0:
+    print("The number is even.")
+else:
+    print("The number is odd.")
+
+# Exercise 2: Guess the Number
+import random
+secret_number = random.randint(1, 100)
+guess = None
+print("\nExercise 2 - Guess the Number Game")
+while guess != secret_number:
+    guess = int(input("Guess the number (1-100): "))
+    if guess < secret_number:
+        print("Too low. Try again.")
+    elif guess > secret_number:
+        print("Too high. Try again.")
+    else:
+        print("Congratulations! You guessed it!")
+
+# Exercise 3: Print Prime Numbers from 1 to 50
+print("\nExercise 3 - Prime numbers between 1 and 50:")
+for num in range(2, 51):
+    is_prime = True
+    for i in range(2, int(num**0.5) + 1):
+        if num % i == 0:
+            is_prime = False
+            break
+    if is_prime:
+        print(num)
+
+# Exercise 4: Factorial Calculation
+def factorial(n):
+    result = 1
+    while n > 1:
+        result *= n
+        n -= 1
+    return result
+
+number = int(input("\nExercise 4 - Enter a number to find its factorial: "))
+print(f"Factorial of {number} is {factorial(number)}")
+
+# Exercise 5: Multiplication Table
+num = int(input("\nExercise 5 - Enter a number for the multiplication table: "))
+print(f"Multiplication table for {num}:")
+for i in range(1, 11):
+    print(f"{num} x {i} = {num * i}")
+
+# Exercise 6: Count Vowels in a String
+text = input("\nExercise 6 - Enter a string to count vowels: ")
+vowel_count = 0
+vowels = "aeiouAEIOU"
+for char in text:
+    if char not in vowels:
+        continue
+    vowel_count += 1
+print(f"Number of vowels: {vowel_count}")
