@@ -1,0 +1,73 @@
+#Exercise 1
+# Creating a favorite fruit set
+favorite_fruits = {"Apple", "Pineapple", "Passionfruit", "Grapes", "Blueberry"}
+print(favorite_fruits)  # Duplicate elements are removed
+
+# Removing elements
+favorite_fruits.remove("Apple")
+print(favorite_fruits)
+
+#Sort through alphabetical order
+print(sorted(favorite_fruits))
+
+#Print the first and last fruit
+favorite_fruits = sorted(favorite_fruits)
+print("First fruit:", favorite_fruits[0])
+print("Last fruit:", favorite_fruits[-1])
+
+#Exercise 2
+my_tuple = (100, 200, 300, 400, 500)
+print(my_tuple[1])   # Second element
+print(my_tuple[-2])  #fourth element
+
+# Create new tuple
+new_tuple = my_tuple + (600,)
+print(new_tuple)
+
+#How many times 0 appears in the new tuple
+number_to_count = 0
+count_of_number = new_tuple.count(number_to_count)
+
+print(f"The number {number_to_count} appears {count_of_number} times in the tuple.")
+
+#Exercise 3
+set_a = {1, 2, 3}
+set_b = {3, 4, 5}
+
+union = set_a | set_b
+print("Union:", union)
+
+intersection = set_a & set_b
+print("Intersection:", intersection)
+
+difference = set_a - set_b
+print("Difference:", difference)
+
+symmetric_difference = set_a ^ set_b
+print("Symmetric Difference:", symmetric_difference)
+
+#Exercise 4
+my_dict = {"title": "Fifty shades of Grey", "Author": "E.L. James", "Year": 2011}
+print(my_dict)
+
+# Adding a new key-value pair
+my_dict["email"] = "eljames@yahoo.com"
+print(my_dict)
+
+# Removing a key-value pair
+del my_dict["Author"]
+print(my_dict)
+
+# Print all keys and values
+
+print("Keys and Values of the dictionary:")
+for key, value in my_dict.items():
+  print(f"Key: {key}, Value: {value}")
+
+#Exercise 5
+
+numbers = [ 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,16,17,18,19,20]
+print(numbers[0:5])     # First five elements
+print(numbers[-5:])     # Last five elements
+print(numbers[::2])     # Every second element
+print(numbers[::-1])    # Reversed list
