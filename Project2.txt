@@ -1,0 +1,193 @@
+#TODO: in the terminal available at the bottom menu bar,
+# install the following packages: flask flask-wtf wtforms requests
+
+from flask import Flask, request, render_template
+from flask_wtf import FlaskForm
+from wtforms import SubmitField, SelectField, IntegerField, validators
+import requests
+import os
+import json
+
+#TODO: create an instance of a Flask web app and call it app
+app.config['SECRET_KEY']=os.urandom(16).hex()
+
+""" ----------- I - JSON DOCUMENTS ----------- """
+def save_to_file(data,filename):
+    with open(filename,'w') as write_file:
+        json.dump(data,write_file,indent=2)
+
+def read_from_file(filename):
+    with open(filename,'r') as read_file:
+        data = json.load(read_file)
+    return data
+
+""" ----------- 2 - API KEY ----------- """
+#TODO: read from the api_key.json file and assign your API key to a variable named api_key
+
+""" ----------- 3 - USEFUL LISTS ----------- """
+#TODO: read from the countries.json file and assign its value to a variable named countries
+
+countries_list = list(countries.keys()) #this line of code is done for you, it creates a list containing all the country names
+
+#variable charts is done for you, it provides a list of possible chart names for the user to select from
+charts = [("top", "Editorial Chart"),
+          ("hot", "Most viewed lyrics in the last 2 hours"),
+          ("mxmweekly", "Most viewed lyrics in the last 7 days"),
+          ("mxmweekly_new", "Most viewed lyrics in the last 7 days limited to new releases only")]
+
+#variable number of results is done for you, it provides 4 options for the user to select from
+number_of_results = [5,10,15,20]
+
+""" ----------- FORMS ----------- """
+#TODO: define a class named Search and include 3 input fields:
+# - select field named country
+# - select field named chartType
+# - integer field named numberResults (let the user only enter an integer from 1 to 10)
+
+class Search(FlaskForm):
+    country = SelectField('Country', choices=countries_list)
+    chartType = SelectField('Chart Type', choices=charts)
+    numberResults = IntegerField('Number of Results', validators=[validators.NumberRange(min=1, max=10)])
+    submit = SubmitField('Search')
+
+
+
+""" ----------- API CALLS ----------- """
+#TODO: complete this function definition by filling out the missing:
+#  - input arguments of the function
+#  - the API request to the defined url
+#  - saving the response of the API request to file
+#  - returning the response of the API request
+def request_top_artists(country_code, number_of_results, api_key):
+    top_artists_url="https://api.musixmatch.com/ws/1.1/chart.artists.get?country={0}&page_size={1}&apikey={2}"\
+        .format(country_code, number_of_results, api_key)
+
+
+# TODO: complete this function definition by filling out the missing:
+#  - input arguments of the function
+#  - the API request to the defined url
+#  - saving the response of the API request to file
+#  - returning the response of the API request
+def request_top_tracks():
+    top_tracks_url="https://api.musixmatch.com/ws/1.1/chart.tracks.get?country={0}&chart_name={1}&page_size={2}&apikey={3}"\
+        .format(country_code,chart_name, number_of_results, api_key)
+    response = requests.get(top_artists_url)
+    if response.status_code == 200:
+        data = response.json()
+        return data
+    else:
+        print("Error:", response.status_code)
+        return None
+""" ----------- ROUTES ----------- """
+#TODO: finish writing the index() function by:
+#  - assigning the Search form into a variable named form
+#  - getting the input data from the user for the fields:
+#    - country
+#    - chartType
+#    - numberResults
+#  - iterate over the artist list inside the top_artists variable
+#  and append the artist names to the list list_of_artists
+#  - iterate over the track list inside the top_track variable
+#  and append the track names, artist names, and share urls to the list list_of_artists
+
+@app.route('/', methods=["GET","POST"])
+def index():
+    form = Search()
+    if request.method == "POST":
+        countrySelected = form.country.data
+        chartSelected = form.chartType.data
+        numberResults = form.numberResults.data
+
+        """ TOP ARTISTS PER COUNTRY """
+        top_artists = request_top_artists(countries[countrySelected],numberResults)
+        list_of_artists = []
+        if top_artists and 'message' in top_artists and 'body' in top_artists['message'] \
+                and 'artist_list' in top_artists['message']['body']:
+            for artist_info in top_artists['message']['body']['artist_list']:
+                artist_name = artist_info['artist']['artist_name']
+                list_of_artists.append(artist_name)
+        """ TOP TRACKS PER COUNTRY AND CHART"""
+        top_tracks = request_top_tracks(countries[countrySelected], chartSelected,numberResults)
+        list_of_tracks = []
+        if top_tracks and 'message' in top_tracks and 'body' in top_tracks['message'] \
+                and 'track_list' in top_tracks['message']['body']:
+            for track_info in top_tracks['message']['body']['track_list']:
+                track_name = track_info['track']['track_name']
+                artist_name = track_info['track']['artist_name']
+                track_share_url = track_info['track']['track_share_url']
+                list_of_tracks.append((track_name, artist_name, track_share_url))
+
+        return render_template('results.html', list_of_artists=list_of_artists, list_of_tracks=list_of_tracks,
+                               country=countrySelected, quantity=numberResults)
+    return render_template('index.html', form=form)
+
+    #TODO: in the index.html file (line 64), include the input form
+#TODO: in the results.html file (lines 68 and 69), fill out the
+# table such that in each row, we see the track name,
+# the artist name, and a clickable link for the lyrics
+
+if __name__ == '__main__':
+    app.run(port=5050,debug=True)
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results</title>
+</head>
+<body>
+    <h1>Results</h1>
+    <h2>Top Artists in {{ country }} ({{ quantity }} results)</h2>
+    <ul>
+        {% for artist in list_of_artists %}
+            <li>{{ artist }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Top Tracks in {{ country }} ({{ quantity }} results)</h2>
+    <table>
+        <tr>
+            <th>Track Name</th>
+            <th>Artist Name</th>
+            <th>Lyrics</th>
+        </tr>
+        {% for track in list_of_tracks %}
+            <tr>
+                <td>{{ track[0] }}</td>
+                <td>{{ track[1] }}</td>
+                <td><a href="{{ track[2] }}">Lyrics</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Charts Search</title>
+</head>
+<body>
+    <h1>Music Charts Search</h1>
+    <form method="POST">
+        {{ form.csrf_token }}
+        <div>
+            {{ form.country.label }}
+            {{ form.country }}
+        </div>
+        <div>
+            {{ form.chartType.label }}
+            {{ form.chartType }}
+        </div>
+        <div>
+            {{ form.numberResults.label }}
+            {{ form.numberResults }}
+        </div>
+        <button type="submit">Search</button>
+    </form>
+</body>
+</html>
